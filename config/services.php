@@ -35,4 +35,12 @@ return [
         ],
     ],
 
+    'accuweather' => [
+        'uri' => env('ACCUWEATHER_URI'),
+        'token' => env('ACCUWEATHER_TOKEN'),
+        'timeout' => env('ACCUWEATHER_TIMEOUT', 10),
+        'retry_times' => env('ACCUWEATHER_RETRY_TIMES', null),
+        'retry_interval' => env('ACCUWEATHER_RETRY_INTERVAL', null),
+    ],
+
 ];

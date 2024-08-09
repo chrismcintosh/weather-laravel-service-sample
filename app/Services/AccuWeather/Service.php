@@ -51,7 +51,8 @@ class Service
         }
 
         $response = $response->json();
-        $items = collect($response)->each(function ($item) {
+
+        $items = collect($response)->map(function ($item) {
             return new LocationDto(
                 $item['Version'],
                 $item['Key'],
@@ -69,22 +70,39 @@ class Service
                 $item['SupplementalAdminAreas'],
                 $item['DataSets']
             );
-        });
+        })->toArray();
 
-        return new LocationCollection($items->toArray());
+        return new LocationCollection($items);
     }
 
-    public function location($key)
+    public function locationByKey($key)
     {
-        $request = $this
+        $response = $this
             ->makeRequest()
-            ->get("locations/v1/$key")
-            ->json();
+            ->get("locations/v1/$key");
 
-        if ($request->failed()) {
-            throw new RequestException($request);
+        if ($response->failed()) {
+            throw new RequestException($response);
         }
 
-        return $request;
+        $response = $response->json();
+
+        return new LocationDto(
+            $response['Version'],
+            $response['Key'],
+            $response['Type'],
+            $response['Rank'],
+            $response['LocalizedName'],
+            $response['EnglishName'],
+            $response['PrimaryPostalCode'],
+            $response['Region'],
+            $response['Country'],
+            $response['AdministrativeArea'],
+            $response['TimeZone'],
+            $response['GeoPosition'],
+            $response['IsAlias'],
+            $response['SupplementalAdminAreas'],
+            $response['DataSets']
+        );
     }
 }
